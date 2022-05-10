@@ -1,19 +1,20 @@
 import React,{useState}from 'react'
 import { Grid, Card , CardContent, CardHeader, CardMedia, IconButton, Typography, Menu,MenuItem,Box,Button} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 import noImage from '../assets/no_image/noimg.jpg'
-import { useDispatch } from 'react-redux'
-import { deleteProfile } from '../store/reducer'
+import { deleteProfile,editProfile } from '../store/reducer'
 import {Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle} from '@mui/material';
 export default function Display() {
   const[anchorEl ,setAnchorEl] = useState(null)
   const dispatch = useDispatch();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [passIdx,setPassIdx]=useState(null);
+  const [passEditProfile,setEditProfile]=useState({});
   const open= Boolean(anchorEl)
-  function handleClick(event,idx){
+  function handleClick(event,idx,profile){
     setPassIdx(idx);
+    setEditProfile(profile)
     setAnchorEl(event.currentTarget)
  }
  function  handleClose(){
@@ -21,6 +22,11 @@ export default function Display() {
  }
   const profileArr = useSelector((state)=>state.web.profiles);
   function editCard(){
+    let senData={
+      profile:passEditProfile,
+      index:passIdx
+    }
+    dispatch(editProfile(senData));
     setAnchorEl(null)
   }
   function deleteCard(){
@@ -46,7 +52,7 @@ export default function Display() {
 <Card variant='outlined'>
   <CardHeader  action={
       <IconButton>
-      < MoreVertIcon id="dot-icon" onClick={(event)=>handleClick(event,index)} 
+      < MoreVertIcon id="dot-icon" onClick={(event)=>handleClick(event,index,profile)} 
         aria-controls={open ? 'icon-menu' : undefined}
         aria-haspopup='true' 
         aria-expanded={open ? 'true' : undefined}/>
@@ -77,9 +83,9 @@ export default function Display() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={DialogClick}>Disagree</Button>
+          <Button onClick={DialogClick}>NO</Button>
           <Button onClick={deleteProfiles} autoFocus>
-            Agree
+            Yes
           </Button>
         </DialogActions>
       </Dialog>

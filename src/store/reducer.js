@@ -5,10 +5,13 @@ export const profiles = createSlice({
   name: 'profiles',
   initialState: {
    profiles: localStorage['profiles'] ?  JSON.parse(localStorage['profiles']).profilesArr : [],
-   name:'zxzx'
+   editProfileData:{
+     profile:{},
+     index:-1
+   }
   },
   reducers: {
-    updateprofile: (state,action) => {
+    insertProfile: (state,action) => {
       let json={
         profilesArr:[]
       };
@@ -26,8 +29,30 @@ export const profiles = createSlice({
          
         }
      },
+     updateProfile: (state,action)=>{
+        const idx = state.editProfileData.index;
+        const copyArr = [...state.profiles];
+        console.log(copyArr)
+        const payload = action.payload
+        copyArr[idx] = payload;
+        const remainsState={
+          index:-1,
+          profile:{}
+        }
+        let json={
+          profilesArr:[]
+        };
+        json.profilesArr = JSON.parse(localStorage['profiles']).profilesArr
+        json.profilesArr[idx] = action.payload;
+        localStorage['profiles'] = JSON.stringify(json);
+       return{
+         ...state, 
+        profiles: copyArr,
+        editProfileData:remainsState
+      }
+        
+     },
      deleteProfile:(state,action)=>{
-       console.log(action.payload)
        let localStr = JSON.parse(localStorage['profiles']).profilesArr;
        localStr.splice(action.payload,1);
        let json={
@@ -42,9 +67,12 @@ export const profiles = createSlice({
           ...state.profiles.slice(action.payload + 1)] 
        
       }
+     },
+     editProfile:(state,action)=>{
+        state.editProfileData = action.payload;
      }
   },
 })
 
-export const { updateprofile,deleteProfile } = profiles.actions
+export const { insertProfile,deleteProfile,editProfile,updateProfile} = profiles.actions
 export default profiles.reducer
