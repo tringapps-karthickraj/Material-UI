@@ -1,10 +1,9 @@
 import React,{useState}from 'react'
-import { Grid, Card , CardContent, CardHeader, CardMedia, IconButton, Typography, Menu,MenuItem,Box,Button} from '@mui/material';
+import { Grid, Card , CardContent, CardHeader, CardMedia, IconButton, Typography, Menu,MenuItem,Box,Button,Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useSelector,useDispatch } from 'react-redux';
-import noImage from '../assets/no_image/noimg.jpg'
-import { deleteProfile,editProfile } from '../store/reducer'
-import {Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle} from '@mui/material';
+import noImage from '../assets/no_image/noimg.jpg';
+import { deleteProfile,editProfile } from '../store/reducer';
 export default function Display() {
   const[anchorEl ,setAnchorEl] = useState(null)
   const dispatch = useDispatch();
@@ -46,6 +45,11 @@ export default function Display() {
   return (
     <div>
       <Grid container spacing={12}>
+        {
+          profileArr?.length === 0 && <Grid item xs={12}>
+              <h2>No data found</h2>
+          </Grid>
+        }
 {profileArr?.length > 0 && profileArr.map((profile,index)=>{  
       return   <Grid item xs={4}>
       <Box className='box'>
